@@ -4,6 +4,7 @@ import com.thortful.challenge.enums.Ingredient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class Drink {
+    @Id
     private String idDrink;
     private String strDrink;
     private String strDrinkThumb;

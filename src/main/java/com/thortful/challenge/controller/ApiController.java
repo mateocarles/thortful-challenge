@@ -1,6 +1,7 @@
 package com.thortful.challenge.controller;
 
 import com.thortful.challenge.dto.DrinkDTO;
+import com.thortful.challenge.dto.JokeDTO;
 import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.model.Drink;
@@ -30,8 +31,8 @@ public class ApiController {
     }
 
     @GetMapping("/jokes")
-    public ResponseEntity<Joke> getJoke(@RequestParam Category category) {
-        Joke joke = jokeService.searchJoke(category);
+    public ResponseEntity<JokeDTO> getJoke(@RequestParam Category category) {
+        JokeDTO joke = jokeService.searchJoke(category);
         return ResponseEntity.ok(joke);
     }
 
@@ -48,8 +49,8 @@ public class ApiController {
     }
 
     @PostMapping("/saveJoke/{userId}")
-    public ResponseEntity<String> saveJoke(@PathVariable String userId, @RequestBody Joke joke) {
-        boolean saved = userService.addJokeToUserProfile(userId, joke);
+    public ResponseEntity<String> saveJoke(@PathVariable String userId, @RequestParam String jokeId) {
+        boolean saved = userService.addJokeToUserProfile(userId, jokeId);
         if (saved) {
             return ResponseEntity.ok("Joke saved successfully to user profile.");
         } else {
@@ -58,8 +59,8 @@ public class ApiController {
     }
 
     @PostMapping("/saveDrink/{userId}")
-    public ResponseEntity<String> saveDrink(@PathVariable String userId, @RequestBody Drink drink) {
-        boolean saved = userService.addDrinkToUserProfile(userId, drink);
+    public ResponseEntity<String> saveDrink(@PathVariable String userId, @RequestParam String drinkId) {
+        boolean saved = userService.addDrinkToUserProfile(userId, drinkId);
         if (saved) {
             return ResponseEntity.ok("Drink saved successfully to user profile.");
         } else {

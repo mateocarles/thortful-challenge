@@ -17,6 +17,6 @@ public class User {
     private String id;
     private String userId;
     private String name;
-    private List<Joke> jokes;
-    private List<Drink> drinks;
+    private List<String> savedJokes;
+    private List<String> savedDrinks;
 }

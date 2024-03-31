@@ -1,7 +1,8 @@
 package com.thortful.challenge.service;
 
+import com.thortful.challenge.exceptions.DrinkAlreadyStoredException;
+import com.thortful.challenge.exceptions.JokeAlreadyStoredException;
 import com.thortful.challenge.model.Drink;
-import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.model.User;
 import com.thortful.challenge.repository.UserRepository;
 import com.thortful.challenge.service.interfaces.UserService;
@@ -21,38 +22,43 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean addJokeToUserProfile(String userId, Joke joke) {
+    public boolean addJokeToUserProfile(String userId, String jokeId) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
-            user.getJokes().add(joke);
+            if (user.getSavedJokes().contains(jokeId)) {
+                throw new JokeAlreadyStoredException("Joke with ID: " + jokeId + " is already stored for this user.");
+            }
+            user.getSavedJokes().add(jokeId);
             userRepository.save(user);
             return true;
         } else {
             // Optionally, create a new UserProfile if not found
             User newUser = new User();
             newUser.setUserId(userId);
-            newUser.setJokes(new ArrayList<>(Collections.singletonList(joke)));
-            newUser.setDrinks(new ArrayList<>());
+            newUser.setSavedJokes(new ArrayList<>(Collections.singletonList(jokeId)));
+            newUser.setSavedDrinks(new ArrayList<>());
             userRepository.save(newUser);
             return true;
         }
     }
 
-    public boolean addDrinkToUserProfile(String userId, Drink drink) {
+    public boolean addDrinkToUserProfile(String userId, String drinkId) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getDrinks().add(drink);
+            if (user.getSavedDrinks().contains(drinkId)) {
+                throw new DrinkAlreadyStoredException("Drink with ID: " + drinkId + " is already stored for this user.");
+            }
+            user.getSavedDrinks().add(drinkId);
             userRepository.save(user);
             return true;
         } else {
             // Optionally, create a new UserProfile if not found
             User newUser = new User();
             newUser.setUserId(userId);
-            newUser.setJokes(new ArrayList<>());
-            newUser.setDrinks(new ArrayList<>(Collections.singletonList(drink)));
+            newUser.setSavedJokes(new ArrayList<>());
+            newUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));
             userRepository.save(newUser);
             return true;
         }
