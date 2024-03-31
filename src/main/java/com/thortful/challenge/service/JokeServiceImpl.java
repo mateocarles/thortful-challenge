@@ -5,6 +5,8 @@ import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.repository.JokeRepository;
 import com.thortful.challenge.service.interfaces.JokeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +17,8 @@ public class JokeServiceImpl implements JokeService {
     private final RestTemplate restTemplate;
 
     private final JokeRepository jokeRepository;
+    private static final Logger logger = LoggerFactory.getLogger(JokeServiceImpl.class);
+
 
     public JokeServiceImpl(RestTemplate restTemplate, @Autowired JokeRepository jokeRepository) {
         this.restTemplate = restTemplate;
@@ -37,6 +41,7 @@ public class JokeServiceImpl implements JokeService {
             try {
                 Thread.sleep(100); // Sleep for 100 milliseconds before retrying
             } catch (InterruptedException e) {
+                logger.error("Error fetching joke from external API for category: " + category, e);
                 Thread.currentThread().interrupt(); // Restore the interrupted status
                 throw new RuntimeException("Interrupted while retrying joke request", e);
             }
