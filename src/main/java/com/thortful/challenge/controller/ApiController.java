@@ -1,5 +1,6 @@
 package com.thortful.challenge.controller;
 
+import com.thortful.challenge.dto.DrinkDTO;
 import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.model.Drink;
@@ -35,15 +36,15 @@ public class ApiController {
     }
 
     @GetMapping("/drinks")
-    public ResponseEntity<List<Drink>> getDrinkByIngredient(@RequestParam Ingredient ingredient) {
-        List<Drink> drinks = drinkService.searchDrinksByIngredient(ingredient);
+    public ResponseEntity<List<DrinkDTO>> getDrinkByIngredient(@RequestParam Ingredient ingredient) {
+        List<DrinkDTO> drinks = drinkService.searchDrinksByIngredient(ingredient);
         return ResponseEntity.ok(drinks);
     }
 
     @GetMapping("/drinks/{drinkId}")
-    public ResponseEntity<Drink> getDrinkIngredientsAndPrep(@PathVariable String drinkId) {
-        Drink drink = drinkService.searchDrinkIngredientsAndPrep(drinkId);
-        return ResponseEntity.ok(drink);
+    public ResponseEntity<DrinkDTO> getDrinkIngredientsAndPrep(@PathVariable String drinkId) {
+        DrinkDTO drinkDTO = drinkService.searchDrinkIngredientsAndPrep(drinkId);
+        return ResponseEntity.ok(drinkDTO);
     }
 
     @PostMapping("/saveJoke/{userId}")
