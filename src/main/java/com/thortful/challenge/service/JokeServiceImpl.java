@@ -2,6 +2,7 @@ package com.thortful.challenge.service;
 
 import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.model.Joke;
+import com.thortful.challenge.service.interfaces.JokeService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 public class JokeServiceImpl implements JokeService {
 
     private RestTemplate restTemplate;
-
 
     public JokeServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

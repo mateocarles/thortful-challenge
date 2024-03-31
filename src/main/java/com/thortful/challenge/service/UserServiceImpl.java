@@ -1,7 +1,10 @@
 package com.thortful.challenge.service;
 
+import com.thortful.challenge.model.Drink;
+import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.model.User;
 import com.thortful.challenge.repository.UserRepository;
+import com.thortful.challenge.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,37 +21,38 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean addJokeToUserProfile(String userId, String jokeId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean addJokeToUserProfile(String userId, Joke joke) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getJokeIds().add(jokeId);
+
+            user.getJokes().add(joke);
             userRepository.save(user);
             return true;
         } else {
             // Optionally, create a new UserProfile if not found
             User newUser = new User();
             newUser.setUserId(userId);
-            newUser.setJokeIds(new ArrayList<>(Collections.singletonList(jokeId)));
-            newUser.setDrinkIds(new ArrayList<>());
+            newUser.setJokes(new ArrayList<>(Collections.singletonList(joke)));
+            newUser.setDrinks(new ArrayList<>());
             userRepository.save(newUser);
             return true;
         }
     }
 
-    public boolean addDrinkToUserProfile(String userId, String drinkId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean addDrinkToUserProfile(String userId, Drink drink) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getDrinkIds().add(drinkId);
+            user.getDrinks().add(drink);
             userRepository.save(user);
             return true;
         } else {
             // Optionally, create a new UserProfile if not found
             User newUser = new User();
             newUser.setUserId(userId);
-            newUser.setJokeIds(new ArrayList<>());
-            newUser.setDrinkIds(new ArrayList<>(Collections.singletonList(drinkId)));
+            newUser.setJokes(new ArrayList<>());
+            newUser.setDrinks(new ArrayList<>(Collections.singletonList(drink)));
             userRepository.save(newUser);
             return true;
         }

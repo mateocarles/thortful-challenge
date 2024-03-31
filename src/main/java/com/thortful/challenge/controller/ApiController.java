@@ -4,9 +4,9 @@ import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.model.Drink;
 import com.thortful.challenge.model.Joke;
-import com.thortful.challenge.service.DrinkService;
-import com.thortful.challenge.service.JokeService;
-import com.thortful.challenge.service.UserService;
+import com.thortful.challenge.service.interfaces.DrinkService;
+import com.thortful.challenge.service.interfaces.JokeService;
+import com.thortful.challenge.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +40,15 @@ public class ApiController {
         return ResponseEntity.ok(drinks);
     }
 
-    @PostMapping("/saveJoke")
-    public ResponseEntity<String> saveJoke(@RequestParam String userId, @RequestParam String jokeId) {
-        boolean saved = userService.addJokeToUserProfile(userId, jokeId);
+    @GetMapping("/drinks/{drinkId}")
+    public ResponseEntity<Drink> getDrinkIngredientsAndPrep(@PathVariable String drinkId) {
+        Drink drink = drinkService.searchDrinkIngredientsAndPrep(drinkId);
+        return ResponseEntity.ok(drink);
+    }
+
+    @PostMapping("/saveJoke/{userId}")
+    public ResponseEntity<String> saveJoke(@PathVariable String userId, @RequestBody Joke joke) {
+        boolean saved = userService.addJokeToUserProfile(userId, joke);
         if (saved) {
             return ResponseEntity.ok("Joke saved successfully to user profile.");
         } else {
@@ -50,9 +56,9 @@ public class ApiController {
         }
     }
 
-    @PostMapping("/saveDrink")
-    public ResponseEntity<String> saveDrink(@RequestParam String userId, @RequestParam String drinkId) {
-        boolean saved = userService.addDrinkToUserProfile(userId, drinkId);
+    @PostMapping("/saveDrink/{userId}")
+    public ResponseEntity<String> saveDrink(@PathVariable String userId, @RequestBody Drink drink) {
+        boolean saved = userService.addDrinkToUserProfile(userId, drink);
         if (saved) {
             return ResponseEntity.ok("Drink saved successfully to user profile.");
         } else {
