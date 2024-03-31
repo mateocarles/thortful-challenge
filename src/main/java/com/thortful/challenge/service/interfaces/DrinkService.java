@@ -10,4 +10,6 @@ public interface DrinkService {
     List<DrinkDTO> searchDrinksByIngredient(Ingredient ingredient);
     DrinkDTO searchDrinkIngredientsAndPrep(String drinkId);
 
+    void saveDrinkToRepository(DrinkDTO drink);
+
 }

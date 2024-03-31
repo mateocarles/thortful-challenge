@@ -2,6 +2,7 @@ package com.thortful.challenge.service;
 
 import com.thortful.challenge.dto.DrinkDTO;
 import com.thortful.challenge.enums.Ingredient;
+import com.thortful.challenge.exceptions.APIException;
 import com.thortful.challenge.model.Drink;
 import com.thortful.challenge.repository.DrinkRepository;
 import com.thortful.challenge.service.interfaces.DrinkService;
@@ -39,12 +40,13 @@ public class DrinkServiceImpl implements DrinkService {
         try {
             DrinkResponse response = restTemplate.getForObject(url, DrinkResponse.class);
             if (response != null && response.getDrinks() != null && !response.getDrinks().isEmpty()) {
-                //save complete drink with all steps and ingredients into DB
-                drinkRepository.save(response.getDrinks().getFirst());
+                //save complete drink with all steps and ingredients into DB GUARDAR UNICAMENTE SI EL USUARIOl LO GUARDA
+                //drinkRepository.save(response.getDrinks().getFirst());
                 return getDrinkDTO(response.drinks.getFirst());
             }
         } catch (Exception e) {
             logger.error("Error fetching drink from external API for drinkId: " + drinkId, e);
+            throw new APIException("Error fetching drink from external API for drinkId: " + drinkId);
         }
         return null;
     }
@@ -62,8 +64,14 @@ public class DrinkServiceImpl implements DrinkService {
             }
         } catch (Exception e) {
             logger.error("Error fetching drinks from external API for ingredient: " + ingredient, e);
+            throw new APIException("Error fetching drinks from external API for ingredient: " + ingredient);
         }
         return Collections.emptyList();
+    }
+
+    public void saveDrinkToRepository(DrinkDTO drinkDTO){
+        Drink drinkModel = getDrinkModel(drinkDTO);
+        drinkRepository.save(drinkModel);
     }
 
     public static DrinkDTO getDrinkDTO(Drink drink) {
@@ -81,6 +89,23 @@ public class DrinkServiceImpl implements DrinkService {
         drinkDTO.setStrIngredient3(drink.getStrIngredient3());
         drinkDTO.setStrIngredient4(drink.getStrIngredient4());
         return drinkDTO;
+    }
+
+    public static Drink getDrinkModel(DrinkDTO drinkDTO) {
+
+        // Map the DrinkDTO to Drink
+        Drink drink = new Drink();
+        drink.setIdDrink(drinkDTO.getIdDrink());
+        drink.setStrDrink(drinkDTO.getStrDrink());
+        drink.setStrDrinkThumb(drinkDTO.getStrDrinkThumb());
+        drink.setStrInstructions(drinkDTO.getStrInstructions());
+        drink.setStrCategory(drinkDTO.getStrCategory());
+        drink.setStrGlass(drinkDTO.getStrGlass());
+        drink.setStrIngredient1(drinkDTO.getStrIngredient1());
+        drink.setStrIngredient2(drinkDTO.getStrIngredient2());
+        drink.setStrIngredient3(drinkDTO.getStrIngredient3());
+        drink.setStrIngredient4(drinkDTO.getStrIngredient4());
+        return drink;
     }
 
     @AllArgsConstructor

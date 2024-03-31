@@ -1,10 +1,11 @@
 package com.thortful.challenge.service;
 
+import com.thortful.challenge.dto.DrinkDTO;
 import com.thortful.challenge.exceptions.DrinkAlreadyStoredException;
 import com.thortful.challenge.exceptions.JokeAlreadyStoredException;
+import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.model.User;
 import com.thortful.challenge.repository.UserRepository;
-import com.thortful.challenge.service.interfaces.DrinkService;
 import com.thortful.challenge.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,16 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final DrinkService drinkService;
+    private final DrinkServiceImpl drinkService;
+    private final JokeServiceImpl jokeService;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, DrinkService drinkService) {
+    public UserServiceImpl(UserRepository userRepository, DrinkServiceImpl drinkService, JokeServiceImpl jokeService) {
         this.userRepository = userRepository;
         this.drinkService = drinkService;
+        this.jokeService = jokeService;
     }
 
     public boolean addJokeToUserProfile(String userId, String jokeId) {
@@ -37,6 +40,8 @@ public class UserServiceImpl implements UserService {
                 if (user.getSavedJokes().contains(jokeId)) {
                     throw new JokeAlreadyStoredException("Joke with ID: " + jokeId + " is already stored for this user.");
                 }
+                //Save Joke to DB, to Jokes Collection
+                saveJokeToDB(jokeId);
                 user.getSavedJokes().add(jokeId);
                 userRepository.save(user);
                 return true;
@@ -72,8 +77,8 @@ public class UserServiceImpl implements UserService {
                 if (user.getSavedDrinks().contains(drinkId)) {
                     throw new DrinkAlreadyStoredException("Drink with ID: " + drinkId + " is already stored for this user.");
                 }
-                //this search will also save the complete drink preparation & ingredients into drinks collection
-                drinkService.searchDrinkIngredientsAndPrep(drinkId);
+                saveDrinkToDB(drinkId);
+                // Add drink to user
                 user.getSavedDrinks().add(drinkId);
                 userRepository.save(user);
                 return true;
@@ -84,6 +89,7 @@ public class UserServiceImpl implements UserService {
                 newUser.setSavedJokes(new ArrayList<>());
                 newUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));
                 userRepository.save(newUser);
+                saveDrinkToDB(drinkId);
                 return true;
             }
         } catch (DrinkAlreadyStoredException e) {
@@ -99,6 +105,17 @@ public class UserServiceImpl implements UserService {
             logger.error("An unexpected error occurred while trying to add a drink for user {}: {}", userId, e.getMessage());
             return false;
         }
+    }
+
+    public void saveDrinkToDB(String drinkId) {
+        // save drink in DB Collection drinks
+        DrinkDTO drinkToSave = drinkService.searchDrinkIngredientsAndPrep(drinkId);
+        drinkService.saveDrinkToRepository(drinkToSave);
+    }
+
+    public void saveJokeToDB(String jokeId) {
+        Joke joke = jokeService.searchJokeById(jokeId);
+        jokeService.saveJoke(joke);
     }
 }
 

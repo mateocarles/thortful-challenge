@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class JokeDTO {
     private String jokeId;
     private String setup;
+    private String category;
     private String delivery;
 }

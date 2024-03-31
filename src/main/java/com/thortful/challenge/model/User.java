@@ -14,9 +14,10 @@ import java.util.List;
 @Data
 public class User {
     @Id
-    private String id;
     private String userId;
     private String name;
     private List<String> savedJokes;
     private List<String> savedDrinks;
+    private String username; // For authentication
+    private String password; //For authentication
 }
