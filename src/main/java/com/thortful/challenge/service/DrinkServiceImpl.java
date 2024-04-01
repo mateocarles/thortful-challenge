@@ -1,9 +1,11 @@
 package com.thortful.challenge.service;
 
 import com.thortful.challenge.dto.DrinkDTO;
+import com.thortful.challenge.dto.JokeDTO;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.exceptions.APIException;
 import com.thortful.challenge.model.Drink;
+import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.repository.DrinkRepository;
 import com.thortful.challenge.service.interfaces.DrinkService;
 import lombok.AllArgsConstructor;
@@ -14,8 +16,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -67,6 +72,15 @@ public class DrinkServiceImpl implements DrinkService {
             throw new APIException("Error fetching drinks from external API for ingredient: " + ingredient);
         }
         return Collections.emptyList();
+    }
+
+    public List<DrinkDTO> findDrinksFromUserByIds(List<String> drinksIds){
+        List<DrinkDTO> drinks = new ArrayList<>();
+        for (String drinkId : drinksIds) {
+            Optional<Drink> drink = drinkRepository.findById(drinkId);
+            drink.ifPresent(value -> drinks.add(getDrinkDTO(value)));
+        }
+        return drinks;
     }
 
     public void saveDrinkToRepository(DrinkDTO drinkDTO){

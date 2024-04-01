@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class JokeServiceImpl implements JokeService {
 
@@ -56,6 +60,15 @@ public class JokeServiceImpl implements JokeService {
         jokeDTO.setSetup(joke.getSetup());
         jokeDTO.setDelivery(joke.getDelivery());
         return jokeDTO;
+    }
+
+    public List<JokeDTO> findJokesFromUserByIds(List<String> jokesIds) {
+        List<JokeDTO> jokes = new ArrayList<>();
+        for (String jokeId : jokesIds) {
+            Optional<Joke> joke = jokeRepository.findById(jokeId);
+            joke.ifPresent(value -> jokes.add(getJokeDTO(value)));
+        }
+        return jokes;
     }
 
     public void saveJoke(Joke joke) {

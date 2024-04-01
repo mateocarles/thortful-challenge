@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,82 +34,79 @@ public class UserServiceImpl implements UserService {
         this.jokeService = jokeService;
     }
 
-    public boolean addJokeToUserProfile(String userId, String jokeId) {
+    public boolean addJokeToUserProfile(String jokeId) {
+        String username = null;
         try {
-            Optional<User> userOptional = userRepository.findByUserId(userId);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                if (user.getSavedJokes().contains(jokeId)) {
-                    throw new JokeAlreadyStoredException("Joke with ID: " + jokeId + " is already stored for this user.");
-                }
-                //Save Joke to DB, to Jokes Collection
-                saveJokeToDB(jokeId);
-                user.getSavedJokes().add(jokeId);
-                userRepository.save(user);
-                return true;
-            } else {
-                // Optionally, create a new UserProfile if not found
-                User newUser = new User();
-                newUser.setUserId(userId);
-                newUser.setSavedJokes(new ArrayList<>(Collections.singletonList(jokeId)));
-                newUser.setSavedDrinks(new ArrayList<>());
-                userRepository.save(newUser);
-                return true;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = (User) authentication.getPrincipal();
+            username = currentUser.getUsername();
+
+            if (currentUser.getSavedJokes() != null && currentUser.getSavedJokes().contains(jokeId)) {
+                throw new JokeAlreadyStoredException("Joke with ID: " + jokeId + " is already stored for this user.");
             }
+
+            //Save Joke to DB, to Jokes Collection
+            saveJokeToDB(jokeId);
+            if(currentUser.getSavedJokes() != null) {
+                currentUser.getSavedJokes().add(jokeId);
+            } else {
+                currentUser.setSavedJokes(new ArrayList<>(Collections.singletonList(jokeId)));
+            }
+            userRepository.save(currentUser);
+            return true;
         } catch (JokeAlreadyStoredException e) {
             // Handle case where joke is already stored
             logger.error("Attempted to add a duplicate joke: {}", e.getMessage());
             return false;
         } catch (DataAccessException e) {
             // Handle general database exceptions
-            logger.error("Database access issue occurred while trying to add a joke for user {}: {}", userId, e.getMessage());
+            logger.error("Database access issue occurred while trying to add a joke for user {}: {}", username, e.getMessage());
             return false;
         } catch (Exception e) {
             // Handle unexpected exceptions
-            logger.error("An unexpected error occurred while trying to add a joke for user {}: {}", userId, e.getMessage());
+            logger.error("An unexpected error occurred while trying to add a joke for user {}: {}", username, e.getMessage());
             return false;
         }
     }
 
-    public boolean addDrinkToUserProfile(String userId, String drinkId) {
+    public boolean addDrinkToUserProfile(String drinkId) {
+        String username = null;
         try {
-            Optional<User> userOptional = userRepository.findByUserId(userId);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                if (user.getSavedDrinks().contains(drinkId)) {
-                    throw new DrinkAlreadyStoredException("Drink with ID: " + drinkId + " is already stored for this user.");
-                }
-                saveDrinkToDB(drinkId);
-                // Add drink to user
-                user.getSavedDrinks().add(drinkId);
-                userRepository.save(user);
-                return true;
-            } else {
-                // Optionally, create a new UserProfile if not found
-                User newUser = new User();
-                newUser.setUserId(userId);
-                newUser.setSavedJokes(new ArrayList<>());
-                newUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));
-                userRepository.save(newUser);
-                saveDrinkToDB(drinkId);
-                return true;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = (User) authentication.getPrincipal();
+            username = currentUser.getUsername();
+
+            if (currentUser.getSavedDrinks() != null && currentUser.getSavedDrinks().contains(drinkId)) {
+                throw new DrinkAlreadyStoredException("Drink with ID: " + drinkId + " is already stored for this user.");
             }
+            saveDrinkToDB(drinkId);
+            // Add drink to user
+            if(currentUser.getSavedDrinks() != null){
+                currentUser.getSavedDrinks().add(drinkId);
+            } else {
+                currentUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));
+            }
+            userRepository.save(currentUser);
+            return true;
+
         } catch (DrinkAlreadyStoredException e) {
             // Handle case where drink is already stored
             logger.error("Attempted to add a duplicate drink: {}", e.getMessage());
             return false;
         } catch (DataAccessException e) {
             // Handle general database exceptions
-            logger.error("Database access issue occurred while trying to add a drink for user {}: {}", userId, e.getMessage());
+            logger.error("Database access issue occurred while trying to add a drink for user {}: {}", username, e.getMessage());
             return false;
         } catch (Exception e) {
             // Handle unexpected exceptions
-            logger.error("An unexpected error occurred while trying to add a drink for user {}: {}", userId, e.getMessage());
+            logger.error("An unexpected error occurred while trying to add a drink for user {}: {}", username, e.getMessage());
             return false;
         }
     }
 
     public void saveDrinkToDB(String drinkId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
         // save drink in DB Collection drinks
         DrinkDTO drinkToSave = drinkService.searchDrinkIngredientsAndPrep(drinkId);
         drinkService.saveDrinkToRepository(drinkToSave);
