@@ -1,7 +1,6 @@
 # Welcome TO MEET & FUN API
 This is an API you can use to retrieve drinks and jokes from external APIS, and have a great time!
-
-You can also save your favorites jokes and drinks into your profile.
+The UI idea is to login and have two buttons to search for Drinks, and Jokes. For drinks you will get a list of all drinks that have that main ingredient (gin or vodka), once you select the one you like, you can get more details about that drink in particular (total ingredients, preparation, glass, etc). For jokes you select a category and you will recieve a random joke based in that category. The jokes and drinks you like, you can save them to your profile.
 ## Setup
 For running the API follow the next steps:
 
