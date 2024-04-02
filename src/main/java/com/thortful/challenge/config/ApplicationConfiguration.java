@@ -19,22 +19,25 @@ public class ApplicationConfiguration {
         this.userRepository = userRepository;
     }
 
-//    defines how to retrieve the user using the UserRepository that is injected.
+    //    defines how to retrieve the user using the UserRepository that is injected.
     @Bean
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-//    creates an instance of the BCryptPasswordEncoder() used to encode the plain user password.
+
+    //    creates an instance of the BCryptPasswordEncoder() used to encode the plain user password.
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-//  sets the new strategy to perform the authentication.
+
+    //  sets the new strategy to perform the authentication.
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

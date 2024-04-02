@@ -30,11 +30,11 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> register(@RequestBody LoginRegisterUserDTO registerUserDto) {
-        try{
+        try {
             authenticationService.signup(registerUserDto);
-            return new ResponseEntity<>("User created correctly",HttpStatus.CREATED);
+            return new ResponseEntity<>("User created correctly", HttpStatus.CREATED);
         } catch (UserAlreadyExistException ex) {
-            return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
         }
     }
 

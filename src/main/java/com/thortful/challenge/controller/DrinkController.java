@@ -1,11 +1,8 @@
 package com.thortful.challenge.controller;
 
 import com.thortful.challenge.dto.DrinkDTO;
-import com.thortful.challenge.dto.JokeDTO;
-import com.thortful.challenge.enums.Category;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.service.interfaces.DrinkService;
-import com.thortful.challenge.service.interfaces.JokeService;
 import com.thortful.challenge.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

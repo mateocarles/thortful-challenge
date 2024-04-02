@@ -1,21 +1,19 @@
 package com.thortful.challenge.service;
 
 import com.thortful.challenge.dto.DrinkDTO;
-import com.thortful.challenge.dto.JokeDTO;
 import com.thortful.challenge.enums.Ingredient;
 import com.thortful.challenge.exceptions.APIException;
 import com.thortful.challenge.model.Drink;
-import com.thortful.challenge.model.Joke;
 import com.thortful.challenge.repository.DrinkRepository;
 import com.thortful.challenge.service.interfaces.DrinkService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +72,7 @@ public class DrinkServiceImpl implements DrinkService {
         return Collections.emptyList();
     }
 
-    public List<DrinkDTO> findDrinksFromUserByIds(List<String> drinksIds){
+    public List<DrinkDTO> findDrinksFromUserByIds(List<String> drinksIds) {
         List<DrinkDTO> drinks = new ArrayList<>();
         for (String drinkId : drinksIds) {
             Optional<Drink> drink = drinkRepository.findById(drinkId);
@@ -83,7 +81,7 @@ public class DrinkServiceImpl implements DrinkService {
         return drinks;
     }
 
-    public void saveDrinkToRepository(DrinkDTO drinkDTO){
+    public void saveDrinkToRepository(DrinkDTO drinkDTO) {
         Drink drinkModel = getDrinkModel(drinkDTO);
         drinkRepository.save(drinkModel);
     }

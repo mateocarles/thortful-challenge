@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
             //Save Joke to DB, to Jokes Collection
             saveJokeToDB(jokeId);
-            if(currentUser.getSavedJokes() != null) {
+            if (currentUser.getSavedJokes() != null) {
                 currentUser.getSavedJokes().add(jokeId);
             } else {
                 currentUser.setSavedJokes(new ArrayList<>(Collections.singletonList(jokeId)));
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
             }
             saveDrinkToDB(drinkId);
             // Add drink to user
-            if(currentUser.getSavedDrinks() != null){
+            if (currentUser.getSavedDrinks() != null) {
                 currentUser.getSavedDrinks().add(drinkId);
             } else {
                 currentUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));

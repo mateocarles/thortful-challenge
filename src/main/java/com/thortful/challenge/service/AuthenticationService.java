@@ -29,7 +29,7 @@ public class AuthenticationService {
     }
 
     public User signup(LoginRegisterUserDTO input) {
-        if(userRepository.findByUsername(input.getUsername()).isEmpty()) {
+        if (userRepository.findByUsername(input.getUsername()).isEmpty()) {
             User user = new User();
             user.setPassword(passwordEncoder.encode(input.getPassword()));
             user.setUsername(input.getUsername());
