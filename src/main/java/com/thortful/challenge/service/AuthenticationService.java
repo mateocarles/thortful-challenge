@@ -28,6 +28,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // method for sign up, and save in db. also checks if already exists
     public User signup(LoginRegisterUserDTO input) {
         if (userRepository.findByUsername(input.getUsername()).isEmpty()) {
             User user = new User();
@@ -40,6 +41,7 @@ public class AuthenticationService {
         }
     }
 
+    // check if user is in db
     public User authenticate(LoginRegisterUserDTO input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

@@ -21,7 +21,6 @@ import java.util.Optional;
 public class JokeServiceImpl implements JokeService {
 
     private final RestTemplate restTemplate;
-
     private final JokeRepository jokeRepository;
     private static final Logger logger = LoggerFactory.getLogger(JokeServiceImpl.class);
 
@@ -31,6 +30,7 @@ public class JokeServiceImpl implements JokeService {
         this.jokeRepository = jokeRepository;
     }
 
+    // Search random joke based in category. JOKE API had some inconcistencies when calling it, that's why I implemented a max num of retries
     public JokeDTO searchJoke(Category category) {
         final int maxRetries = 5; // Maximum number of retries
         int attempts = 0;
@@ -42,7 +42,6 @@ public class JokeServiceImpl implements JokeService {
                 return getJokeDTO(joke);
             }
             attempts++; // Increment the attempt counter
-            // Optionally, introduce a small delay here if you're hitting rate limits
             try {
                 Thread.sleep(100); // Sleep for 100 milliseconds before retrying
             } catch (InterruptedException e) {
@@ -62,6 +61,7 @@ public class JokeServiceImpl implements JokeService {
         return jokeDTO;
     }
 
+    // find all jokes from collection given their ids
     public List<JokeDTO> findJokesFromUserByIds(List<String> jokesIds) {
         List<JokeDTO> jokes = new ArrayList<>();
         for (String jokeId : jokesIds) {
@@ -71,10 +71,12 @@ public class JokeServiceImpl implements JokeService {
         return jokes;
     }
 
+    // save joke into jokes collection in MongoDB
     public void saveJoke(Joke joke) {
         jokeRepository.save(joke);
     }
 
+    //Search specific Joke // method used for when the joke is stored in user profile AND jokes collection
     public Joke searchJokeById(String jokeId) {
         final int maxRetries = 5; // Maximum number of retries
         int attempts = 0;
@@ -89,7 +91,6 @@ public class JokeServiceImpl implements JokeService {
                 return joke;
             }
             attempts++; // Increment the attempt counter
-            // Optionally, introduce a small delay here if you're hitting rate limits
             try {
                 Thread.sleep(100); // Sleep for 100 milliseconds before retrying
             } catch (InterruptedException e) {

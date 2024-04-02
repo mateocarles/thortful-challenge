@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "49487126-6a57-419c-b70d-8b933327d2e8",
+		"name": "Thortful Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1828312"
+	},
+	"item": [
+		{
+			"name": "SIGN UP ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"JuanDccsdd\",\n    \"password\":\"JuanCPASSWORD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"JuanDa\",\n    \"password\":\"JuanCPASSWORD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET DRINK BY INGREDIENT (VODKA or GIN)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKdWFuRGEiLCJpYXQiOjE3MTIwMTAwOTUsImV4cCI6MTcxMjAxMzY5NX0.6o4nYHjEE_DRVIuMV_IYZLbzFBP-7p3-6wNplRJTJ_s",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/drinks?ingredient=vodka",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"drinks"
+					],
+					"query": [
+						{
+							"key": "ingredient",
+							"value": "vodka"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET JOKE BY CATEGORY",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/jokes?category=SPOOKY ",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"jokes"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "SPOOKY "
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SAVE JOKE",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKdWFuRGEiLCJpYXQiOjE3MTE5NDAyMzksImV4cCI6MTcxMTk0MzgzOX0.1QJbKBA7izx-7V5xsw-5CikwQ2E_UdSQx7pRLYJNZME",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/save-joke?jokeId=296",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"save-joke"
+					],
+					"query": [
+						{
+							"key": "jokeId",
+							"value": "296"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SAVE DRINK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKdWFuRGEiLCJpYXQiOjE3MTE5NDAyMzksImV4cCI6MTcxMTk0MzgzOX0.1QJbKBA7izx-7V5xsw-5CikwQ2E_UdSQx7pRLYJNZME",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/save-drink?drinkId=178344",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"save-drink"
+					],
+					"query": [
+						{
+							"key": "drinkId",
+							"value": "178344"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET DRINK BY DRINKID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKdWFuRGEiLCJpYXQiOjE3MTIwMTAwOTUsImV4cCI6MTcxMjAxMzY5NX0.6o4nYHjEE_DRVIuMV_IYZLbzFBP-7p3-6wNplRJTJ_s",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/drinks/178344",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"drinks",
+						"178344"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL JOKES FROM CURRENT USER",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKdWFuRGEiLCJpYXQiOjE3MTIwMTMzODgsImV4cCI6MTcxMjAxNjk4OH0.HpTVYPkm5FY_yX5x6Vm6Z_tsB3VIAF5_h73XCKF0Kb0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/user/jokes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"user",
+						"jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL DRINKS FROM CURRENT USER",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/meet-and-fun/user/drinks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"meet-and-fun",
+						"user",
+						"drinks"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2huIFdpY2siLCJpYXQiOjE3MTIwMjgxODEsImV4cCI6MTcxMjAzMTc4MX0.ZYz2KB-EutQsTgQ9Zgj-pRPvFzyh8w8D3qPXFgjbygY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

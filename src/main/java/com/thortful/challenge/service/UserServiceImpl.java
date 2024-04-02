@@ -36,21 +36,24 @@ public class UserServiceImpl implements UserService {
     public boolean addJokeToUserProfile(String jokeId) {
         String username = null;
         try {
+            // GET current logged user info
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User currentUser = (User) authentication.getPrincipal();
             username = currentUser.getUsername();
-
+            // Throw ex if user already has the joke saved in their profile
             if (currentUser.getSavedJokes() != null && currentUser.getSavedJokes().contains(jokeId)) {
                 throw new JokeAlreadyStoredException("Joke with ID: " + jokeId + " is already stored for this user.");
             }
 
-            //Save Joke to DB, to Jokes Collection
+            // Save Joke to DB, to Jokes Collection
             saveJokeToDB(jokeId);
+            // Check if user had already other jokes saved, if yes add it to list if not create list and add the first joke.
             if (currentUser.getSavedJokes() != null) {
                 currentUser.getSavedJokes().add(jokeId);
             } else {
                 currentUser.setSavedJokes(new ArrayList<>(Collections.singletonList(jokeId)));
             }
+            // Save user with updated saved jokes
             userRepository.save(currentUser);
             return true;
         } catch (JokeAlreadyStoredException e) {
@@ -71,20 +74,23 @@ public class UserServiceImpl implements UserService {
     public boolean addDrinkToUserProfile(String drinkId) {
         String username = null;
         try {
+            // GET current logged user info
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User currentUser = (User) authentication.getPrincipal();
             username = currentUser.getUsername();
-
+            // Throw ex if user already has the drink saved in their profile
             if (currentUser.getSavedDrinks() != null && currentUser.getSavedDrinks().contains(drinkId)) {
                 throw new DrinkAlreadyStoredException("Drink with ID: " + drinkId + " is already stored for this user.");
             }
+            // Save drink to drinks collection in MariaDB
             saveDrinkToDB(drinkId);
-            // Add drink to user
+            // Check if user had already other drinks saved, if yes add it to list if not create list and add the first drink.
             if (currentUser.getSavedDrinks() != null) {
                 currentUser.getSavedDrinks().add(drinkId);
             } else {
                 currentUser.setSavedDrinks(new ArrayList<>(Collections.singletonList(drinkId)));
             }
+            // Save updated user with saved drinks
             userRepository.save(currentUser);
             return true;
 
@@ -104,14 +110,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void saveDrinkToDB(String drinkId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        // save drink in DB Collection drinks
+        // Save drink in DB Collection drinks
         DrinkDTO drinkToSave = drinkService.searchDrinkIngredientsAndPrep(drinkId);
         drinkService.saveDrinkToRepository(drinkToSave);
     }
 
     public void saveJokeToDB(String jokeId) {
+        // Save joke to DB Collection jokes
         Joke joke = jokeService.searchJokeById(jokeId);
         jokeService.saveJoke(joke);
     }

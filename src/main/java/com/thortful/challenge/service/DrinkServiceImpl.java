@@ -35,16 +35,17 @@ public class DrinkServiceImpl implements DrinkService {
         this.drinkRepository = drinkRepository;
     }
 
+    //Method to retieve all info about one drink given drinkId
     public DrinkDTO searchDrinkIngredientsAndPrep(String drinkId) {
         String url = UriComponentsBuilder
                 .fromHttpUrl("https://www.thecocktaildb.com/api/json/v1/1/lookup.php")
                 .queryParam("i", drinkId)
                 .toUriString();
         try {
+            //call to API to get full detail of the drink
             DrinkResponse response = restTemplate.getForObject(url, DrinkResponse.class);
             if (response != null && response.getDrinks() != null && !response.getDrinks().isEmpty()) {
-                //save complete drink with all steps and ingredients into DB GUARDAR UNICAMENTE SI EL USUARIOl LO GUARDA
-                //drinkRepository.save(response.getDrinks().getFirst());
+                // transform to drinkDTO and return
                 return getDrinkDTO(response.drinks.getFirst());
             }
         } catch (Exception e) {
@@ -61,8 +62,10 @@ public class DrinkServiceImpl implements DrinkService {
                 .toUriString();
 
         try {
+            // Call API to return List of all drinks that contain that ingredient (GIN or VODKA) api only uses these two
             DrinkResponse response = restTemplate.getForObject(url, DrinkResponse.class);
             if (response != null && response.getDrinks() != null) {
+                // convert all Drinks into DrinkDTOs and return
                 return response.getDrinks().stream().map(DrinkServiceImpl::getDrinkDTO).collect(Collectors.toList());
             }
         } catch (Exception e) {
@@ -72,6 +75,7 @@ public class DrinkServiceImpl implements DrinkService {
         return Collections.emptyList();
     }
 
+    // Get all drinks given the ids of each
     public List<DrinkDTO> findDrinksFromUserByIds(List<String> drinksIds) {
         List<DrinkDTO> drinks = new ArrayList<>();
         for (String drinkId : drinksIds) {
@@ -81,6 +85,7 @@ public class DrinkServiceImpl implements DrinkService {
         return drinks;
     }
 
+    // Save one drink to drinks collection in MongoDB
     public void saveDrinkToRepository(DrinkDTO drinkDTO) {
         Drink drinkModel = getDrinkModel(drinkDTO);
         drinkRepository.save(drinkModel);
