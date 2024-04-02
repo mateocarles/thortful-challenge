@@ -30,7 +30,7 @@ public class UserController {
     private DrinkService drinkService; // Service to fetch drinks
 
     @GetMapping("/jokes")
-    public ResponseEntity<List<JokeDTO>> getUserJokes() {
+    public ResponseEntity<?> getUserJokes() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
@@ -39,11 +39,14 @@ public class UserController {
         }
 
         List<JokeDTO> jokes = jokeService.findJokesFromUserByIds(currentUser.getSavedJokes());
+        if (jokes == null || jokes.isEmpty()) {
+            return ResponseEntity.ok().body("User does not have any jokes");
+        }
         return ResponseEntity.ok(jokes);
     }
 
     @GetMapping("/drinks")
-    public ResponseEntity<List<DrinkDTO>> getUserDrinks() {
+    public ResponseEntity<?> getUserDrinks() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
@@ -52,6 +55,9 @@ public class UserController {
         }
 
         List<DrinkDTO> drinks = drinkService.findDrinksFromUserByIds(currentUser.getSavedDrinks());
+        if (drinks == null || drinks.isEmpty()) {
+            return ResponseEntity.ok().body("User does not have any drinks");
+        }
         return ResponseEntity.ok(drinks);
     }
 }

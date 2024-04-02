@@ -34,7 +34,10 @@ public class JokeServiceImpl implements JokeService {
     public JokeDTO searchJoke(Category category) {
         final int maxRetries = 5; // Maximum number of retries
         int attempts = 0;
-        String url = "https://v2.jokeapi.dev/joke/" + category.name();
+        String url = UriComponentsBuilder
+                .fromHttpUrl("https://v2.jokeapi.dev/joke/" + category.name())
+                .queryParam("blacklistFlags", "nsfw,religious,political,racist,explicit")
+                .toUriString();
 
         while (attempts < maxRetries) {
             Joke joke = restTemplate.getForObject(url, Joke.class);
