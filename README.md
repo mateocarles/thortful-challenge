@@ -5,7 +5,7 @@ You can also save your favorites jokes and drinks into your profile.
 ## Setup
 For running the API follow the next steps:
 
-Download Zip and extract content.
+Download Zip and extract content or clone the repo.
 
 ## On Windows
 ### Step 1: Install Docker Desktop for Windows
