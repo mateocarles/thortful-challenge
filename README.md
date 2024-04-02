@@ -62,7 +62,7 @@ example body:
 "password":"P@ssWordJohn"
 }
 
-#### The response of the login will include a token. Use this token to access all other endpoints 
+#### The response of the login will include a token. Use this token to access all other endpoints by adding Authorization Header Bearer {token} to the postman collection
 #### Check swagger documentation for additional endpoints such as search jokes, search drinks, save drink to profile, save joke to profile, retrieve all jokes from user and retrieve all drinks from user.
 
 ### Technologies used in this API
