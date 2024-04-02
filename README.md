@@ -67,6 +67,7 @@ example body:
 
 ### Technologies used in this API
 - Java Amazon Corretto 21
+- SpringBoot 3.2.4
 - Gradle 8.7
 - MongoDB 
 - Docker
